@@ -147,6 +147,261 @@ type ColumnKey = 'name' | 'email' | 'role' | 'status';
 
 type ColumnVisibility = Record<ColumnKey, boolean>;
 
+// --- Define separate components for each table example (Outside TablePage) ---
+
+const BasicTableExample: React.FC = () => {
+  // Assuming 'columns' and 'data' are defined or imported in the scope where this is used
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Basic Table</h3>
+      <div className="space-y-4">
+        <Table columns={columns} data={mockUsers} />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const ExpandableRowsExample: React.FC = () => {
+  // Assuming 'columns', 'data', 'Mail', 'Phone' are defined/imported
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Expandable Rows</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500 mb-4 px-4">
+          Click the arrow icon to expand rows and view additional information.
+        </p>
+        <Table
+          columns={columns}
+          data={mockUsers}
+          expandableContent={(row: User) => (
+            <div className="p-2">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium mb-2">Contact Information</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 text-sm">
+                        <Mail size={14} />
+                        <span>{row.email}</span>
+                      </div>
+                      {row.phone && (
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Phone size={14} />
+                          <span>{row.phone}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Details</h4>
+                    <p className="text-sm text-gray-600">{row.details || 'No details available.'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const StickyHeaderExample: React.FC = () => {
+  // Assuming 'columns', 'data' are defined/imported
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Sticky Header & First Column</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500 mb-4 px-4">
+          Scroll horizontally and vertically to see the sticky header and first column in action.
+        </p>
+        <div className="sticky-table-container border rounded-lg">
+          <Table
+            columns={columns}
+            data={mockUsers}
+            stickyHeader
+            stickyFirstColumn
+          />
+        </div>
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const SelectableExample: React.FC = () => {
+  // Assuming 'columns', 'data', 'User' are defined/imported
+  const [selectedRows, setSelectedRows] = useState<User[]>([]);
+  const handleRowSelect = (rows: User[]) => {
+    setSelectedRows(rows);
+  };
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Selectable Rows</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500">
+          Selected rows: {selectedRows.length}
+        </p>
+        <Table
+          columns={columns}
+          data={mockUsers}
+          selectedRows={selectedRows}
+          onRowSelect={handleRowSelect}
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const ResizableColumnsExample: React.FC = () => {
+  // Assuming 'columns', 'data' are defined/imported
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Resizable Columns</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500 mb-4 px-4">
+          Hover over column edges and drag to resize. Double-click to auto-fit (placeholder).
+        </p>
+        <Table
+          columns={columns}
+          data={mockUsers}
+          resizableColumns
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const RowActionsExample: React.FC = () => {
+  // Assuming 'columns', 'data', 'User', 'Eye', 'Edit', 'Trash2' are defined/imported
+  const rowActions = (row: User) => [
+    <button
+      key="view"
+      className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
+      title="View details"
+      onClick={() => console.log('View', row)}
+    >
+      <Eye size={16} />
+    </button>,
+    <button
+      key="edit"
+      className="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded"
+      title="Edit user"
+      onClick={() => console.log('Edit', row)}
+    >
+      <Edit size={16} />
+    </button>,
+    <button
+      key="delete"
+      className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
+      title="Delete user"
+      onClick={() => console.log('Delete', row)}
+    >
+      <Trash2 size={16} />
+    </button>
+  ];
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Row Actions</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500 mb-4 px-4">
+          Each row has action buttons for common operations.
+        </p>
+        <Table
+          columns={columns}
+          data={mockUsers}
+          rowActions={rowActions}
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const LoadingExample: React.FC = () => {
+  // Assuming 'columns', 'data', 'Button', 'Loader2', 'RefreshCw' are defined/imported
+  const [loading, setLoading] = useState(false);
+  const handleToggleLoading = () => setLoading(!loading);
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Loading State</h3>
+      <div className="space-y-4">
+        <Button
+          variant="outlined"
+          onClick={handleToggleLoading}
+          leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <RefreshCw size={16} />}
+        >
+          {loading ? 'Loading...' : 'Toggle Loading'}
+        </Button>
+        <Table
+          columns={columns}
+          data={mockUsers}
+          isLoading={loading}
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const EmptyStateExample: React.FC = () => {
+  // Assuming 'columns' are defined/imported
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Empty State</h3>
+      <div className="space-y-4">
+        <Table
+          columns={columns}
+          data={[]}
+          emptyState={<p className="text-center text-gray-500 py-8">No users found.</p>}
+        />
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+const MobileViewExample: React.FC = () => {
+  // Assuming 'data', 'Badge', 'Button' are defined/imported
+  return (
+    <SectionContentWrapper>
+      <h3 className="text-lg font-semibold mb-4">Mobile View (Card Layout)</h3>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-500 mb-4 px-4">
+          On mobile devices, tables transform into card views. This example shows the pattern:
+        </p>
+        <div className="table-to-cards">
+          {mockUsers.slice(0, 3).map((row: User) => (
+            <div key={row.id} className="table-row-card">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <div className="font-medium">{row.name}</div>
+                  <div className="text-sm text-gray-500">{row.email}</div>
+                </div>
+                <Badge variant="solid" color={row.status === 'active' ? 'success' : 'secondary'}>
+                  {row.status}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <div className="table-cell-label">Role</div>
+                  <div className="table-cell-content">{row.role}</div>
+                </div>
+                <div>
+                  <div className="table-cell-label">Last Active</div>
+                  <div className="table-cell-content">{row.lastLogin}</div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t flex justify-end space-x-2">
+                <Button variant="ghost" size="sm">View</Button>
+                <Button variant="outlined" size="sm">Edit</Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </SectionContentWrapper>
+  );
+};
+
+// --- End of separate components ---
+
 export default function TablePage() {
   const [selectedRows, setSelectedRows] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -174,84 +429,181 @@ export default function TablePage() {
     console.log('Row clicked:', row);
   };
 
-  const renderBasicExample = () => {
+  // Update render functions to use the new components
+  const renderBasicExample = () => <BasicTableExample />;
+  const renderExpandableRowsExample = () => <ExpandableRowsExample />;
+  const renderStickyHeaderExample = () => <StickyHeaderExample />;
+  const renderSelectableExample = () => <SelectableExample />;
+  const renderResizableColumnsExample = () => <ResizableColumnsExample />;
+  const renderRowActionsExample = () => <RowActionsExample />;
+  const renderLoadingExample = () => <LoadingExample />;
+  const renderEmptyStateExample = () => <EmptyStateExample />;
+  const renderMobileViewExample = () => <MobileViewExample />;
+
+  // Update renderAllExamples to call the updated render functions
+  const renderAllExamples = () => (
+    <div className="space-y-8">
+      {renderBasicExample()}
+      {renderExpandableRowsExample()}
+      {renderStickyHeaderExample()}
+      {renderSelectableExample()}
+      {renderResizableColumnsExample()}
+      {renderRowActionsExample()}
+      {renderLoadingExample()}
+      {renderEmptyStateExample()}
+      {renderMobileViewExample()}
+    </div>
+  );
+
+  const renderAccessibility = () => {
     return (
       <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Basic Table</h3>
-        <div className="space-y-4">
-          <Table
-            columns={columns}
-            data={data}
-            onSort={handleSort}
-            onRowClick={handleRowClick}
-          />
+        <h3 className="text-lg font-semibold mb-4">Accessibility Guidelines</h3>
+        <div className="space-y-4 text-gray-700 text-sm">
+          <ul className="list-disc list-outside space-y-2 pl-5">
+            <li>The table uses semantic HTML with proper ARIA attributes.</li>
+            <li>Sortable columns have appropriate aria-sort attributes.</li>
+            <li>Row selection is keyboard accessible.</li>
+            <li>Loading states are announced to screen readers.</li>
+            <li>Empty states provide clear feedback.</li>
+          </ul>
         </div>
       </SectionContentWrapper>
     );
   };
 
-  const renderSelectableExample = () => {
+  const renderApiReference = () => {
     return (
       <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Selectable Rows</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500">
-            Selected rows: {selectedRows.length}
-          </p>
-          <Table
-            columns={columns}
-            data={data}
-            selectedRows={selectedRows}
-            onRowSelect={setSelectedRows}
-            onSort={handleSort}
-          />
+        <h3 className="text-lg font-semibold mb-4">Props</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left">
+                <th className="pb-2">Prop</th>
+                <th className="pb-2">Type</th>
+                <th className="pb-2">Default</th>
+                <th className="pb-2">Description</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              <tr>
+                <td className="py-2 font-mono text-xs">columns</td>
+                <td className="py-2 font-mono text-xs">Column[]</td>
+                <td className="py-2 font-mono text-xs">required</td>
+                <td className="py-2">Array of column definitions.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">data</td>
+                <td className="py-2 font-mono text-xs">T[]</td>
+                <td className="py-2 font-mono text-xs">required</td>
+                <td className="py-2">Array of data to display.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">isLoading</td>
+                <td className="py-2 font-mono text-xs">boolean</td>
+                <td className="py-2 font-mono text-xs">false</td>
+                <td className="py-2">Shows loading state when true.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">onSort</td>
+                <td className="py-2 font-mono text-xs">function</td>
+                <td className="py-2 font-mono text-xs">undefined</td>
+                <td className="py-2">Callback for sort events.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">onRowClick</td>
+                <td className="py-2 font-mono text-xs">function</td>
+                <td className="py-2 font-mono text-xs">undefined</td>
+                <td className="py-2">Callback for row click events.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">selectedRows</td>
+                <td className="py-2 font-mono text-xs">T[]</td>
+                <td className="py-2 font-mono text-xs">[]</td>
+                <td className="py-2">Array of selected rows.</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-mono text-xs">onRowSelect</td>
+                <td className="py-2 font-mono text-xs">function</td>
+                <td className="py-2 font-mono text-xs">undefined</td>
+                <td className="py-2">Callback for row selection events.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </SectionContentWrapper>
     );
   };
 
-  const renderLoadingExample = () => {
+  const renderPatterns = () => {
     return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Loading State</h3>
-        <div className="space-y-4">
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setIsLoading(true);
-              setTimeout(() => setIsLoading(false), 2000);
-            }}
-          >
-            Toggle Loading
-          </Button>
-          <Table
-            columns={columns}
-            data={data}
-            isLoading={isLoading}
-            onSort={handleSort}
-          />
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderEmptyStateExample = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Empty State</h3>
-        <div className="space-y-4">
-          <Table
-            columns={columns}
-            data={[]}
-            emptyState={
-              <div className="flex flex-col items-center justify-center p-8 space-y-2">
-                <p className="text-gray-500">No users found</p>
-                <Button variant="outlined">Add User</Button>
-              </div>
-            }
-          />
-        </div>
-      </SectionContentWrapper>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <SectionContentWrapper>
+          <h3 className="text-lg font-semibold text-green-600 mb-4">Do's</h3>
+          <ul className="space-y-4">
+            <BestPracticeItem
+              icon={<DoIcon />}
+              title="Clear headers"
+              description="Use clear, descriptive column headers"
+              example={
+                <div className="mt-2 border p-2 rounded">
+                  <Table
+                    columns={columns.slice(0, 3)}
+                    data={data.slice(0, 1)}
+                  />
+                </div>
+              }
+            />
+            <BestPracticeItem
+              icon={<DoIcon />}
+              title="Consistent alignment"
+              description="Align content consistently (text left, numbers right)"
+              example={
+                <div className="mt-2 border p-2 rounded">
+                  <Table
+                    columns={[
+                      { key: 'name', header: 'Name', accessor: (row) => row.name },
+                    ]}
+                    data={data.slice(0, 1)}
+                  />
+                </div>
+              }
+            />
+          </ul>
+        </SectionContentWrapper>
+        <SectionContentWrapper>
+          <h3 className="text-lg font-semibold text-red-600 mb-4">Don'ts</h3>
+          <ul className="space-y-4">
+            <BestPracticeItem
+              icon={<DontIcon />}
+              title="Overcrowded tables"
+              description="Don't include too many columns on mobile"
+              example={
+                <div className="mt-2 border p-2 rounded overflow-x-auto max-w-[250px]">
+                  <Table
+                    columns={columns}
+                    data={data.slice(0, 1)}
+                  />
+                </div>
+              }
+            />
+            <BestPracticeItem
+              icon={<DontIcon />}
+              title="Missing empty states"
+              description="Don't leave tables empty without explanation"
+              example={
+                <div className="mt-2 border p-2 rounded">
+                  <Table
+                    columns={columns.slice(0, 3)}
+                    data={[]}
+                  />
+                </div>
+              }
+            />
+          </ul>
+        </SectionContentWrapper>
+      </div>
     );
   };
 
@@ -390,7 +742,7 @@ export default function TablePage() {
     };
 
     const generateTableCode = () => {
-      const visibleColumnsCode = baseColumns
+      const visibleColumnsCode = columns
         .filter(column => visibleColumns[column.key as ColumnKey])
         .map(column => {
           // Create a simplified version of the column for code display
@@ -1161,347 +1513,6 @@ export function DataTable() {
       </SectionContentWrapper>
     );
   };
-
-  const renderAccessibility = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Accessibility Guidelines</h3>
-        <div className="space-y-4 text-gray-700 text-sm">
-          <ul className="list-disc list-outside space-y-2 pl-5">
-            <li>The table uses semantic HTML with proper ARIA attributes.</li>
-            <li>Sortable columns have appropriate aria-sort attributes.</li>
-            <li>Row selection is keyboard accessible.</li>
-            <li>Loading states are announced to screen readers.</li>
-            <li>Empty states provide clear feedback.</li>
-          </ul>
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderApiReference = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Props</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left">
-                <th className="pb-2">Prop</th>
-                <th className="pb-2">Type</th>
-                <th className="pb-2">Default</th>
-                <th className="pb-2">Description</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              <tr>
-                <td className="py-2 font-mono text-xs">columns</td>
-                <td className="py-2 font-mono text-xs">Column[]</td>
-                <td className="py-2 font-mono text-xs">required</td>
-                <td className="py-2">Array of column definitions.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">data</td>
-                <td className="py-2 font-mono text-xs">T[]</td>
-                <td className="py-2 font-mono text-xs">required</td>
-                <td className="py-2">Array of data to display.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">isLoading</td>
-                <td className="py-2 font-mono text-xs">boolean</td>
-                <td className="py-2 font-mono text-xs">false</td>
-                <td className="py-2">Shows loading state when true.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">onSort</td>
-                <td className="py-2 font-mono text-xs">function</td>
-                <td className="py-2 font-mono text-xs">undefined</td>
-                <td className="py-2">Callback for sort events.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">onRowClick</td>
-                <td className="py-2 font-mono text-xs">function</td>
-                <td className="py-2 font-mono text-xs">undefined</td>
-                <td className="py-2">Callback for row click events.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">selectedRows</td>
-                <td className="py-2 font-mono text-xs">T[]</td>
-                <td className="py-2 font-mono text-xs">[]</td>
-                <td className="py-2">Array of selected rows.</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-mono text-xs">onRowSelect</td>
-                <td className="py-2 font-mono text-xs">function</td>
-                <td className="py-2 font-mono text-xs">undefined</td>
-                <td className="py-2">Callback for row selection events.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderPatterns = () => {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <SectionContentWrapper>
-          <h3 className="text-lg font-semibold text-green-600 mb-4">Do's</h3>
-          <ul className="space-y-4">
-            <BestPracticeItem
-              icon={<DoIcon />}
-              title="Clear headers"
-              description="Use clear, descriptive column headers"
-              example={
-                <div className="mt-2 border p-2 rounded">
-                  <Table
-                    columns={columns.slice(0, 3)}
-                    data={data.slice(0, 1)}
-                  />
-                </div>
-              }
-            />
-            <BestPracticeItem
-              icon={<DoIcon />}
-              title="Consistent alignment"
-              description="Align content consistently (text left, numbers right)"
-              example={
-                <div className="mt-2 border p-2 rounded">
-                  <Table
-                    columns={[
-                      { key: 'name', header: 'Name', accessor: (row) => row.name },
-                    ]}
-                    data={data.slice(0, 1)}
-                  />
-                </div>
-              }
-            />
-          </ul>
-        </SectionContentWrapper>
-        <SectionContentWrapper>
-          <h3 className="text-lg font-semibold text-red-600 mb-4">Don'ts</h3>
-          <ul className="space-y-4">
-            <BestPracticeItem
-              icon={<DontIcon />}
-              title="Overcrowded tables"
-              description="Don't include too many columns on mobile"
-              example={
-                <div className="mt-2 border p-2 rounded overflow-x-auto max-w-[250px]">
-                  <Table
-                    columns={columns}
-                    data={data.slice(0, 1)}
-                  />
-                </div>
-              }
-            />
-            <BestPracticeItem
-              icon={<DontIcon />}
-              title="Missing empty states"
-              description="Don't leave tables empty without explanation"
-              example={
-                <div className="mt-2 border p-2 rounded">
-                  <Table
-                    columns={columns.slice(0, 3)}
-                    data={[]}
-                  />
-                </div>
-              }
-            />
-          </ul>
-        </SectionContentWrapper>
-      </div>
-    );
-  };
-
-  const renderExpandableRowsExample = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Expandable Rows</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500 mb-4 px-4">
-            Click the arrow icon to expand rows and view additional information.
-          </p>
-          <Table
-            columns={columns}
-            data={data}
-            onSort={handleSort}
-            expandableContent={(row) => (
-              <div className="p-2">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium mb-2">Contact Information</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2 text-sm">
-                          <Mail size={14} />
-                          <span>{row.email}</span>
-                        </div>
-                        {row.phone && (
-                          <div className="flex items-center space-x-2 text-sm">
-                            <Phone size={14} />
-                            <span>{row.phone}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-medium mb-2">Details</h4>
-                      <p className="text-sm text-gray-600">{row.details || 'No details available.'}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          />
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderStickyHeaderExample = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Sticky Header & First Column</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500 mb-4 px-4">
-            Scroll horizontally and vertically to see the sticky header and first column in action.
-          </p>
-          <div className="sticky-table-container border rounded-lg">
-            <Table
-              columns={columns}
-              data={data}
-              onSort={handleSort}
-              stickyHeader
-              stickyFirstColumn
-            />
-          </div>
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderResizableColumnsExample = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Resizable Columns</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500 mb-4 px-4">
-            Hover over column edges and drag to resize. Double-click to auto-fit (placeholder).
-          </p>
-          <Table
-            columns={columns}
-            data={data}
-            onSort={handleSort}
-            resizableColumns
-          />
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderRowActionsExample = () => {
-    const rowActions = (row: User) => [
-      <button
-        key="view"
-        className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
-        title="View details"
-        onClick={() => console.log('View', row)}
-      >
-        <Eye size={16} />
-      </button>,
-      <button
-        key="edit"
-        className="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded"
-        title="Edit user"
-        onClick={() => console.log('Edit', row)}
-      >
-        <Edit size={16} />
-      </button>,
-      <button
-        key="delete"
-        className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
-        title="Delete user"
-        onClick={() => console.log('Delete', row)}
-      >
-        <Trash2 size={16} />
-      </button>
-    ];
-
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Row Actions</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500 mb-4 px-4">
-            Each row has action buttons for common operations.
-          </p>
-          <Table
-            columns={columns}
-            data={data}
-            rowActions={rowActions}
-          />
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderMobileViewExample = () => {
-    return (
-      <SectionContentWrapper>
-        <h3 className="text-lg font-semibold mb-4">Mobile View (Card Layout)</h3>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500 mb-4 px-4">
-            On mobile devices, tables transform into card views. This example shows the pattern:
-          </p>
-          <div className="table-to-cards">
-            {data.slice(0, 3).map((row) => (
-              <div key={row.id} className="table-row-card">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <div className="font-medium">{row.name}</div>
-                    <div className="text-sm text-gray-500">{row.email}</div>
-                  </div>
-                  <Badge variant="solid" color={row.status === 'active' ? 'success' : 'secondary'}>
-                    {row.status}
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <div className="table-cell-label">Role</div>
-                    <div className="table-cell-content">{row.role}</div>
-                  </div>
-                  <div>
-                    <div className="table-cell-label">Last Active</div>
-                    <div className="table-cell-content">{row.lastLogin}</div>
-                  </div>
-                </div>
-                
-                <div className="mt-3 pt-3 border-t flex justify-end space-x-2">
-                  <Button variant="ghost" size="sm">View</Button>
-                  <Button variant="outlined" size="sm">Edit</Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </SectionContentWrapper>
-    );
-  };
-
-  const renderAllExamples = () => (
-    <div className="space-y-8">
-      {renderBasicExample()}
-      {renderExpandableRowsExample()}
-      {renderStickyHeaderExample()}
-      {renderSelectableExample()}
-      {renderResizableColumnsExample()}
-      {renderRowActionsExample()}
-      {renderLoadingExample()}
-      {renderEmptyStateExample()}
-      {renderMobileViewExample()}
-    </div>
-  );
 
   return (
     <ComponentDocTemplate

@@ -12,11 +12,6 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/index.js"
-    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -32,30 +27,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/components.js"
     ],
-    "/components/buttons": [
+    "/components/table": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/components/buttons.js"
-    ],
-    "/components/inputs": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/components/inputs.js"
-    ],
-    "/components/navigation-bar": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/components/navigation-bar.js"
-    ],
-    "/components/pagination": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/components/pagination.js"
-    ],
-    "/docs/introduction": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/docs/introduction.js"
+      "static/chunks/pages/components/table.js"
     ]
   },
   "ampFirstPages": []

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ComponentDocTemplate, 
   SectionContentWrapper, 
@@ -141,6 +141,150 @@ const defaultPlaygroundProps: PlaygroundProps = {
   animationSpeed: 'normal'
 };
 
+// Define the InputExample component outside of InputsPage
+const InputExample: React.FC<Partial<ExampleProps>> = (props) => {
+  const mergedProps = { ...defaultPlaygroundProps, ...props };
+  const [inputValue, setInputValue] = useState(mergedProps.value || '');
+  const [isValid, setIsValid] = useState(true);
+  const [validationMessage, setValidationMessage] = useState('');
+
+  // Apply default features based on input type
+  useEffect(() => {
+    if (mergedProps.inputType === 'password' && !('showPasswordToggle' in props)) {
+      mergedProps.showPasswordToggle = true;
+    }
+    if (mergedProps.inputType === 'email' && !('prefixIcon' in props)) {
+      mergedProps.prefixIcon = true;
+      if (!('placeholder' in props)) {
+        mergedProps.placeholder = 'example@domain.com';
+      }
+    }
+  }, [mergedProps.inputType, mergedProps.prefixIcon, mergedProps.showPasswordToggle, props]);
+
+  // Input validation logic
+  const validateInput = useCallback((value: string, type: InputType) => {
+    if (!value) {
+      setIsValid(true);
+      setValidationMessage('');
+      return true;
+    }
+    switch (type) {
+      case 'number':
+        const isValidNumber = /^-?\d*\.?\d*$/.test(value);
+        setIsValid(isValidNumber);
+        setValidationMessage(isValidNumber ? '' : 'Please enter only numbers');
+        return isValidNumber;
+      case 'email':
+        if (!value.includes('@')) {
+          setIsValid(false);
+          setValidationMessage('Email must include @ symbol');
+          return false;
+        }
+        const [localPart, domain] = value.split('@');
+        if (!localPart || localPart.length < 1) {
+          setIsValid(false);
+          setValidationMessage('Username part before @ is required');
+          return false;
+        }
+        if (!domain || !domain.includes('.')) {
+          setIsValid(false);
+          setValidationMessage('Domain must include a dot (example.com)');
+          return false;
+        }
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        setIsValid(isValidEmail);
+        if (!isValidEmail) {
+          setValidationMessage('Please enter a valid email address');
+        } else {
+          setValidationMessage('');
+        }
+        return isValidEmail;
+      case 'password':
+        const hasMinLength = value.length >= 8;
+        const hasUppercase = /[A-Z]/.test(value);
+        const hasLowercase = /[a-z]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+        const isStrongPassword = hasMinLength && hasUppercase && hasLowercase && hasNumber;
+        setIsValid(isStrongPassword);
+        if (!isStrongPassword) {
+          const requirements = [
+            `${hasMinLength ? '✓' : '✗'} Minimum 8 characters`,
+            `${hasUppercase ? '✓' : '✗'} At least one uppercase letter`,
+            `${hasLowercase ? '✓' : '✗'} At least one lowercase letter`,
+            `${hasNumber ? '✓' : '✗'} At least one number`
+          ];
+          setValidationMessage(requirements.join('\n'));
+        } else {
+          setValidationMessage('✓ Strong password');
+        }
+        return isStrongPassword;
+      default:
+        setIsValid(true);
+        setValidationMessage('');
+        return true;
+    }
+  }, []);
+
+  // Input change handler with validation
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    validateInput(newValue, mergedProps.inputType);
+  }, [mergedProps.inputType, validateInput]);
+
+  // Determine which icon to use based on input type
+  const getIconForType = (type: InputType) => {
+    switch (type) {
+      case 'text': return <User size={16} />;
+      case 'password': return <Lock size={16} />;
+      case 'number': return <Hash size={16} />;
+      case 'email': return <Mail size={16} />;
+      case 'date': return <Calendar size={16} />;
+      case 'time': return <Clock size={16} />;
+      default: return <Search size={16} />;
+    }
+  };
+
+  // Compute validation message or helper text
+  const displayMessage = !isValid ? validationMessage : mergedProps.helperText;
+  const isErrorState = !isValid || mergedProps.error || mergedProps.state === 'error';
+
+  return (
+    <div className={cn(
+      "w-full",
+      mergedProps.fullWidth ? "w-full" : "max-w-sm",
+      props.className
+    )}>
+      <Input
+        type={mergedProps.inputType}
+        variant={mergedProps.variant}
+        placeholder={mergedProps.placeholder}
+        disabled={mergedProps.disabled || mergedProps.state === 'disabled'}
+        error={isErrorState}
+        errorMessage={isValid ? undefined : validationMessage}
+        helperText={isValid ? mergedProps.helperText : undefined}
+        readOnly={mergedProps.readOnly}
+        className={cn(
+          mergedProps.state === 'hover' && 'hover:border-gray-400',
+          mergedProps.state === 'focused' && 'ring-2 ring-blue-500 border-transparent',
+          'transition-all',
+          getAnimationClass(mergedProps.animationSpeed)
+        )}
+        value={inputValue}
+        onChange={handleInputChange}
+        label={mergedProps.label}
+        required={mergedProps.required}
+        fullWidth={mergedProps.fullWidth}
+        prefixIcon={mergedProps.prefixIcon ? getIconForType(mergedProps.inputType) : undefined}
+        suffixIcon={mergedProps.suffixIcon ? <Search size={16} /> : undefined}
+        showPasswordToggle={mergedProps.inputType === 'password' && mergedProps.showPasswordToggle}
+        showNumberControls={mergedProps.inputType === 'number' && mergedProps.showNumberControls}
+        size={mergedProps.size}
+      />
+    </div>
+  );
+};
+
 function InputsPage() {
   // State for playground props
   const [playgroundProps, setPlaygroundProps] = useState<PlaygroundProps>(defaultPlaygroundProps);
@@ -253,161 +397,9 @@ export default function Example() {
 }`;
   };
 
-  // Helper function to render an input example
+  // Helper function to render an input example - now just uses the component
   const renderDocExample = (props: Partial<ExampleProps>) => {
-    const mergedProps = { ...defaultPlaygroundProps, ...props };
-    const [inputValue, setInputValue] = useState(mergedProps.value || '');
-    const [isValid, setIsValid] = useState(true);
-    const [validationMessage, setValidationMessage] = useState('');
-    
-    // Apply default features based on input type
-    if (mergedProps.inputType === 'password' && !('showPasswordToggle' in props)) {
-      mergedProps.showPasswordToggle = true;
-    }
-    
-    if (mergedProps.inputType === 'email' && !('prefixIcon' in props)) {
-      mergedProps.prefixIcon = true;
-      if (!('placeholder' in props)) {
-        mergedProps.placeholder = 'example@domain.com';
-      }
-    }
-    
-    // Input validation logic
-    const validateInput = (value: string, type: InputType) => {
-      if (!value) {
-        setIsValid(true);
-        setValidationMessage('');
-        return true;
-      }
-      
-      switch (type) {
-        case 'number':
-          // Verify only numbers are entered
-          const isValidNumber = /^-?\d*\.?\d*$/.test(value);
-          setIsValid(isValidNumber);
-          setValidationMessage(isValidNumber ? '' : 'Please enter only numbers');
-          return isValidNumber;
-          
-        case 'email':
-          // More detailed email validation with helpful message
-          if (!value.includes('@')) {
-            setIsValid(false);
-            setValidationMessage('Email must include @ symbol');
-            return false;
-          }
-          
-          const [localPart, domain] = value.split('@');
-          if (!localPart || localPart.length < 1) {
-            setIsValid(false);
-            setValidationMessage('Username part before @ is required');
-            return false;
-          }
-          
-          if (!domain || !domain.includes('.')) {
-            setIsValid(false);
-            setValidationMessage('Domain must include a dot (example.com)');
-            return false;
-          }
-          
-          const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-          setIsValid(isValidEmail);
-          if (!isValidEmail) {
-            setValidationMessage('Please enter a valid email address');
-          } else {
-            setValidationMessage('');
-          }
-          return isValidEmail;
-          
-        case 'password':
-          // Individual requirement checks for passwords
-          const hasMinLength = value.length >= 8;
-          const hasUppercase = /[A-Z]/.test(value);
-          const hasLowercase = /[a-z]/.test(value);
-          const hasNumber = /[0-9]/.test(value);
-          
-          const isStrongPassword = hasMinLength && hasUppercase && hasLowercase && hasNumber;
-          setIsValid(isStrongPassword);
-          
-          // Building a detailed message with requirements status
-          if (!isStrongPassword) {
-            const requirements = [
-              `${hasMinLength ? '✓' : '✗'} Minimum 8 characters`,
-              `${hasUppercase ? '✓' : '✗'} At least one uppercase letter`,
-              `${hasLowercase ? '✓' : '✗'} At least one lowercase letter`,
-              `${hasNumber ? '✓' : '✗'} At least one number`
-            ];
-            setValidationMessage(requirements.join('\n'));
-          } else {
-            setValidationMessage('✓ Strong password');
-          }
-          
-          return isStrongPassword;
-          
-        default:
-          setIsValid(true);
-          setValidationMessage('');
-          return true;
-      }
-    };
-    
-    // Input change handler with validation
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setInputValue(newValue);
-      validateInput(newValue, mergedProps.inputType);
-    };
-    
-    // Determine which icon to use based on input type
-    const getIconForType = (type: InputType) => {
-      switch (type) {
-        case 'text': return <User size={16} />;
-        case 'password': return <Lock size={16} />;
-        case 'number': return <Hash size={16} />;
-        case 'email': return <Mail size={16} />;
-        case 'date': return <Calendar size={16} />;
-        case 'time': return <Clock size={16} />;
-        default: return <Search size={16} />;
-      }
-    };
-
-    // Compute validation message or helper text
-    const displayMessage = !isValid ? validationMessage : mergedProps.helperText;
-    const isErrorState = !isValid || mergedProps.error || mergedProps.state === 'error';
-
-    return (
-      <div className={cn(
-        "w-full", 
-        mergedProps.fullWidth ? "w-full" : "max-w-sm",
-        props.className
-      )}>
-          <Input
-          type={mergedProps.inputType}
-            variant={mergedProps.variant}
-            placeholder={mergedProps.placeholder}
-            disabled={mergedProps.disabled || mergedProps.state === 'disabled'}
-            error={isErrorState}
-          errorMessage={isValid ? undefined : validationMessage}
-          helperText={isValid ? mergedProps.helperText : undefined}
-            readOnly={mergedProps.readOnly}
-            className={cn(
-              mergedProps.state === 'hover' && 'hover:border-gray-400',
-              mergedProps.state === 'focused' && 'ring-2 ring-blue-500 border-transparent',
-            'transition-all',
-            getAnimationClass(mergedProps.animationSpeed)
-            )}
-            value={inputValue}
-            onChange={handleInputChange}
-          label={mergedProps.label}
-          required={mergedProps.required}
-          fullWidth={mergedProps.fullWidth}
-          prefixIcon={mergedProps.prefixIcon ? getIconForType(mergedProps.inputType) : undefined}
-          suffixIcon={mergedProps.suffixIcon ? <Search size={16} /> : undefined}
-          showPasswordToggle={mergedProps.inputType === 'password' && mergedProps.showPasswordToggle}
-          showNumberControls={mergedProps.inputType === 'number' && mergedProps.showNumberControls}
-          size={mergedProps.size}
-        />
-      </div>
-    );
+    return <InputExample {...props} />;
   };
 
   // Core variants section - refactored to match button page pattern

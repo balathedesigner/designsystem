@@ -57,6 +57,104 @@ const defaultPlaygroundProps: PlaygroundProps = {
   siblingCount: 1,
 };
 
+// Define separate components for each pagination example
+
+const BasicPaginationExample: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const total = 50;
+  const size = 10;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <h4 className="text-sm font-medium mb-2">Basic Example (5 pages)</h4>
+        <Pagination
+          currentPage={page}
+          totalCount={total}
+          pageSize={size}
+          onPageChange={setPage}
+        />
+      </div>
+    </div>
+  );
+};
+
+const MorePagesExample: React.FC = () => {
+  const [page, setPage] = useState(5);
+  const total = 100;
+  const size = 10;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <h4 className="text-sm font-medium mb-2">More Pages Example (10 pages)</h4>
+        <Pagination
+          currentPage={page}
+          totalCount={total}
+          pageSize={size}
+          onPageChange={setPage}
+        />
+      </div>
+    </div>
+  );
+};
+
+const EdgeCasesExample: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const total = 1000;
+  const size = 10;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <h4 className="text-sm font-medium mb-2">Edge Cases Example (100 pages)</h4>
+        <Pagination
+          currentPage={page}
+          totalCount={total}
+          pageSize={size}
+          onPageChange={setPage}
+        />
+      </div>
+    </div>
+  );
+};
+
+const SiblingCountExample: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const total = 100;
+  const size = 10;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <h4 className="text-sm font-medium mb-2">Sibling Count Example (2 siblings)</h4>
+        <Pagination
+          currentPage={page}
+          totalCount={total}
+          pageSize={size}
+          onPageChange={setPage}
+          siblingCount={2}
+        />
+      </div>
+    </div>
+  );
+};
+
+const FewPagesExample: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const total = 20;
+  const size = 10;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <h4 className="text-sm font-medium mb-2">Few Pages Example (2 pages)</h4>
+        <Pagination
+          currentPage={page}
+          totalCount={total}
+          pageSize={size}
+          onPageChange={setPage}
+        />
+      </div>
+    </div>
+  );
+};
+
 export default function PaginationPage() {
   const [playgroundProps, setPlaygroundProps] = useState<PlaygroundProps>(defaultPlaygroundProps);
 
@@ -90,101 +188,11 @@ export default function Example() {
 }`;
   };
 
-  const renderBasicExample = () => {
-    const [page, setPage] = useState(1);
-    const total = 50;
-    const size = 10;
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 space-y-4" id="basic-usage">
-          <h4 className="text-sm font-medium mb-2">Basic Example (5 pages)</h4>
-          <Pagination
-            currentPage={page}
-            totalCount={total}
-            pageSize={size}
-            onPageChange={setPage}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const renderMorePagesExample = () => {
-    const [page, setPage] = useState(1);
-    const total = 100;
-    const size = 10;
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 space-y-4" id="more-pages">
-          <h4 className="text-sm font-medium mb-2">More Pages Example (10 pages)</h4>
-          <Pagination
-            currentPage={page}
-            totalCount={total}
-            pageSize={size}
-            onPageChange={setPage}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const renderEdgeCasesExample = () => {
-    const [page, setPage] = useState(1);
-    const total = 1000;
-    const size = 10;
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 space-y-4" id="edge-cases">
-          <h4 className="text-sm font-medium mb-2">Edge Cases Example (100 pages)</h4>
-          <Pagination
-            currentPage={page}
-            totalCount={total}
-            pageSize={size}
-            onPageChange={setPage}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const renderSiblingCountExample = () => {
-    const [page, setPage] = useState(1);
-    const total = 100;
-    const size = 10;
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 space-y-4" id="sibling-count">
-          <h4 className="text-sm font-medium mb-2">Sibling Count Example (2 siblings)</h4>
-          <Pagination
-            currentPage={page}
-            totalCount={total}
-            pageSize={size}
-            onPageChange={setPage}
-            siblingCount={2}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  const renderFewPagesExample = () => {
-    const [page, setPage] = useState(1);
-    const total = 20;
-    const size = 10;
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 space-y-4" id="few-pages">
-          <h4 className="text-sm font-medium mb-2">Few Pages Example (2 pages)</h4>
-          <Pagination
-            currentPage={page}
-            totalCount={total}
-            pageSize={size}
-            onPageChange={setPage}
-          />
-        </div>
-      </div>
-    );
-  };
+  const renderBasicExample = () => <BasicPaginationExample />;
+  const renderMorePagesExample = () => <MorePagesExample />;
+  const renderEdgeCasesExample = () => <EdgeCasesExample />;
+  const renderSiblingCountExample = () => <SiblingCountExample />;
+  const renderFewPagesExample = () => <FewPagesExample />;
 
   const renderPlayground = () => {
     return (

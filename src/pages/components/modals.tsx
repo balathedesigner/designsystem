@@ -64,6 +64,182 @@ const defaultPlaygroundProps: PlaygroundProps = {
   showExampleFooter: false,
 };
 
+// ---- Define separate components for each modal type ----
+
+// AlertDialog Example Component
+const AlertDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Alert Dialog</h3>
+      <p className="text-sm text-gray-600 mb-3">Displays a simple message with an acknowledge action.</p>
+      <Button onClick={() => setIsOpen(true)}>Show Alert</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Information"
+        size="sm"
+        footer={
+          <div className="flex justify-end p-4">
+            <Button onClick={() => setIsOpen(false)}>OK</Button>
+          </div>
+        }
+      >
+        This is an important message for the user.
+      </Modal>
+    </div>
+  );
+};
+
+// ConfirmationDialog Example Component
+const ConfirmationDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Confirmation Dialog</h3>
+      <p className="text-sm text-gray-600 mb-3">Asks the user to confirm a potentially destructive action.</p>
+      <Button variant="destructive" onClick={() => setIsOpen(true)}>Delete Item</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Confirm Deletion"
+        size="sm"
+        footer={
+          <div className="flex justify-end gap-2 p-4">
+            <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => setIsOpen(false)}>Delete</Button>
+          </div>
+        }
+      >
+        Are you sure you want to delete this item? This action cannot be undone.
+      </Modal>
+    </div>
+  );
+};
+
+// FormDialog Example Component
+const FormDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Form Dialog</h3>
+      <p className="text-sm text-gray-600 mb-3">Allows users to submit information via a form within a modal.</p>
+      <Button onClick={() => setIsOpen(true)}>Edit Profile</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Edit Profile"
+        footer={
+          <div className="flex justify-end gap-2 p-4">
+            <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsOpen(false)}>Save</Button>
+          </div>
+        }
+      >
+        <form onSubmit={(e) => { e.preventDefault(); setIsOpen(false); /* Handle submission */ }}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="form-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input id="form-name" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="John Doe" />
+            </div>
+            <div>
+              <label htmlFor="form-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input id="form-email" type="email" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="you@example.com" />
+            </div>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+};
+
+// ScrollableDialog Example Component
+const ScrollableDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Scrollable Content</h3>
+      <p className="text-sm text-gray-600 mb-3">Demonstrates how modal content scrolls when it exceeds the available height.</p>
+      <Button onClick={() => setIsOpen(true)}>Show Scrollable</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Terms of Service"
+        footer={
+          <div className="flex justify-end gap-2 p-4">
+            <Button variant="outlined" onClick={() => setIsOpen(false)}>Decline</Button>
+            <Button onClick={() => setIsOpen(false)}>Accept</Button>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          {[...Array(15)].map((_, i) => (
+            <p key={i}>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          ))}
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+// FullScreenDialog Example Component
+const FullScreenDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Full Screen Dialog</h3>
+      <p className="text-sm text-gray-600 mb-3">Uses the full screen for immersive content or tasks.</p>
+      <Button onClick={() => setIsOpen(true)}>Open Full Screen</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Application Settings"
+        size="full"
+        footer={
+          <div className="flex justify-end gap-2 p-4">
+            <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsOpen(false)}>Save Settings</Button>
+          </div>
+        }
+      >
+        <p>This modal takes up the full screen. Useful for complex settings or focused tasks.</p>
+        {/* Add more complex content here */}
+      </Modal>
+    </div>
+  );
+};
+
+// NonDismissibleDialog Example Component
+const NonDismissibleDialogExample: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div>
+      <h3 className="text-sm font-medium mb-4">Non-Dismissible Dialog</h3>
+      <p className="text-sm text-gray-600 mb-3">Prevents closing by clicking outside or pressing Escape. Requires explicit user action.</p>
+      <Button onClick={() => setIsOpen(true)}>Show Non-Dismissible</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)} // Still need onClose for the button
+        title="Action Required"
+        size="sm"
+        closeOnOutsideClick={false} // Disable outside click
+        closeOnEscape={false}       // Disable escape key
+        showCloseButton={false}     // Hide default close button
+        footer={
+          <div className="flex justify-end p-4">
+            <Button onClick={() => setIsOpen(false)}>Acknowledge</Button>
+          </div>
+        }
+      >
+        You must acknowledge this message before continuing.
+      </Modal>
+    </div>
+  );
+};
+
+// ---- End of separate components ----
+
 export default function ModalsPage() {
   const [playgroundProps, setPlaygroundProps] = useState<PlaygroundProps>(defaultPlaygroundProps);
 
@@ -182,171 +358,12 @@ export default function Example() {
     </div>
   );
 
-  const renderAlertDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Alert Dialog</h3>
-        <p className="text-sm text-gray-600 mb-3">A simple alert to inform the user.</p>
-        <Button onClick={() => setIsOpen(true)}>Show Alert</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Alert"
-          size="sm"
-          footer={
-            <div className="flex justify-end p-4">
-              <Button onClick={() => setIsOpen(false)}>OK</Button>
-            </div>
-          }
-        >
-          This is an important message for the user.
-        </Modal>
-      </div>
-    );
-  };
-
-  const renderConfirmationDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Confirmation Dialog</h3>
-        <p className="text-sm text-gray-600 mb-3">Asks the user to confirm a potentially destructive action.</p>
-        <Button variant="destructive" onClick={() => setIsOpen(true)}>Delete Item</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Confirm Deletion"
-          size="sm"
-          footer={
-            <div className="flex justify-end gap-2 p-4">
-              <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
-              <Button variant="destructive" onClick={() => setIsOpen(false)}>Delete</Button> 
-            </div>
-          }
-        >
-          Are you sure you want to delete this item? This action cannot be undone.
-        </Modal>
-      </div>
-    );
-  };
-
-  const renderFormDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Form Dialog</h3>
-        <p className="text-sm text-gray-600 mb-3">Allows users to submit information via a form within a modal.</p>
-        <Button onClick={() => setIsOpen(true)}>Edit Profile</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Edit Profile"
-          footer={
-            <div className="flex justify-end gap-2 p-4">
-              <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
-              <Button onClick={() => setIsOpen(false)}>Save</Button>
-            </div>
-          }
-        >
-          <form onSubmit={(e) => { e.preventDefault(); setIsOpen(false); /* Handle submission */ }}>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="form-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input id="form-name" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="John Doe" />
-              </div>
-              <div>
-                <label htmlFor="form-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input id="form-email" type="email" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="you@example.com" />
-              </div>
-            </div>
-          </form>
-        </Modal>
-      </div>
-    );
-  };
-
-  const renderScrollableDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Scrollable Content</h3>
-        <p className="text-sm text-gray-600 mb-3">Demonstrates how modal content scrolls when it exceeds the available height.</p>
-        <Button onClick={() => setIsOpen(true)}>Show Scrollable</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Terms of Service"
-          footer={
-            <div className="flex justify-end gap-2 p-4">
-              <Button variant="outlined" onClick={() => setIsOpen(false)}>Decline</Button>
-              <Button onClick={() => setIsOpen(false)}>Accept</Button>
-            </div>
-          }
-        >
-          <div className="space-y-3">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            {[...Array(15)].map((_, i) => (
-              <p key={i}>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            ))}
-          </div>
-        </Modal>
-      </div>
-    );
-  };
-
-  const renderFullScreenDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Full Screen Dialog</h3>
-        <p className="text-sm text-gray-600 mb-3">Uses the full screen for immersive content or tasks.</p>
-        <Button onClick={() => setIsOpen(true)}>Open Full Screen</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Application Settings"
-          size="full"
-          footer={
-            <div className="flex justify-end gap-2 p-4">
-              <Button variant="outlined" onClick={() => setIsOpen(false)}>Cancel</Button>
-              <Button onClick={() => setIsOpen(false)}>Save Settings</Button>
-            </div>
-          }
-        >
-          <p>This modal takes up the full screen. Useful for complex settings or focused tasks.</p>
-          {/* Add more complex content here */}
-        </Modal>
-      </div>
-    );
-  };
-
-  const renderNonDismissibleDialog = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div>
-        <h3 className="text-sm font-medium mb-4">Non-Dismissible Dialog</h3>
-        <p className="text-sm text-gray-600 mb-3">Prevents closing by clicking outside or pressing Escape. Requires explicit user action.</p>
-        <Button onClick={() => setIsOpen(true)}>Show Non-Dismissible</Button>
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)} // Still need onClose for the button
-          title="Action Required"
-          size="sm"
-          closeOnOutsideClick={false} // Disable outside click
-          closeOnEscape={false}       // Disable escape key
-          showCloseButton={false}     // Hide default close button
-          footer={
-            <div className="flex justify-end p-4">
-              <Button onClick={() => setIsOpen(false)}>Acknowledge</Button>
-            </div>
-          }
-        >
-          You must acknowledge this message before continuing.
-        </Modal>
-      </div>
-    );
-  };
+  const renderAlertDialog = () => <AlertDialogExample />;
+  const renderConfirmationDialog = () => <ConfirmationDialogExample />;
+  const renderFormDialog = () => <FormDialogExample />;
+  const renderScrollableDialog = () => <ScrollableDialogExample />;
+  const renderFullScreenDialog = () => <FullScreenDialogExample />;
+  const renderNonDismissibleDialog = () => <NonDismissibleDialogExample />;
 
   const renderPlayground = () => {
     const [isPlaygroundModalOpen, setIsPlaygroundModalOpen] = useState(false);
