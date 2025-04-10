@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Table animations and styles */
+@keyframes expandHeight {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-expandHeight {
+  animation: expandHeight 0.3s ease-out;
+  overflow: hidden;
+}
+
+/* Sticky table styles */
+.sticky-table-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Mobile table card view */
+@media (max-width: 640px) {
+  .table-to-cards .table-row-card {
+    @apply border rounded-lg mb-4 shadow-sm p-4 bg-white;
+  }
+  
+  .table-to-cards .table-cell-label {
+    @apply text-xs text-gray-500 font-medium uppercase mb-1;
+  }
+  
+  .table-to-cards .table-cell-content {
+    @apply mb-3;
+  }
+} 

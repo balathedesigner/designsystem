@@ -1,0 +1,12 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/components": "pages/components.js",
+  "/components/buttons": "pages/components/buttons.js",
+  "/": "pages/index.js",
+  "/components/inputs": "pages/components/inputs.js",
+  "/components/navigation-bar": "pages/components/navigation-bar.js",
+  "/components/pagination": "pages/components/pagination.js",
+  "/docs/introduction": "pages/docs/introduction.js"
+}
